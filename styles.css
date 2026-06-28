@@ -148,8 +148,7 @@ h1 {
 .flash-card {
   position: relative;
   inline-size: 100%;
-  aspect-ratio: 1;
-  min-block-size: 16rem;
+  aspect-ratio: 16 / 10;
   border: 0;
   padding: 0;
   border-radius: var(--radius);
