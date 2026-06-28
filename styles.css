@@ -1,0 +1,297 @@
+:root {
+  color-scheme: light;
+  --font-thai: "Mali", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --font-japanese: "M PLUS Rounded 1c", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --ink: #253047;
+  --muted: #677083;
+  --paper: #fff6d8;
+  --paper-line: #efdca4;
+  --surface: #fffdf7;
+  --surface-soft: #fff0c7;
+  --primary: #c8463f;
+  --primary-strong: #a93632;
+  --teal: #087f7a;
+  --mint: #d8f7e8;
+  --sun: #ffd166;
+  --peach: #ffb199;
+  --sky: #9ed4ff;
+  --line: #e2d2a8;
+  --white: #ffffff;
+  --focus: #1f5eff;
+  --forced-border: CanvasText;
+  --radius: 0.5rem;
+  --text-ja-scale: 0.78em;
+  --text-title-sm: 2.4rem;
+  --text-title-lg: 3.3rem;
+  --text-meta: 0.95rem;
+  --text-card-sm: 4.75rem;
+  --text-card-lg: 8rem;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-block-size: 100dvb;
+  margin: 0;
+  display: grid;
+  place-items: start center;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--sky) 24%, transparent), transparent 28rem),
+    repeating-linear-gradient(0deg, transparent 0 1.9375rem, color-mix(in srgb, var(--paper-line) 48%, transparent) 1.9375rem 2rem),
+    repeating-linear-gradient(90deg, transparent 0 1.9375rem, color-mix(in srgb, var(--paper-line) 48%, transparent) 1.9375rem 2rem),
+    var(--paper);
+  color: var(--ink);
+  font-family: var(--font-thai);
+}
+
+button {
+  min-block-size: 3rem;
+  border: 0.125rem solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button span {
+  display: block;
+}
+
+button span[lang="ja"],
+h1 span[lang="ja"] {
+  font-family: var(--font-japanese);
+  font-size: var(--text-ja-scale);
+  font-weight: 800;
+}
+
+button:focus-visible {
+  outline: 0.25rem solid color-mix(in srgb, var(--focus) 48%, transparent);
+  outline-offset: var(--space-1);
+}
+
+.app {
+  inline-size: min(100%, 45rem);
+  padding: var(--space-5) var(--space-4) var(--space-8);
+}
+
+.topbar {
+  display: grid;
+  gap: var(--space-4);
+  margin-block-end: var(--space-6);
+}
+
+h1 {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--text-title-sm);
+  line-height: 1;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.progress {
+  display: inline-flex;
+  align-items: center;
+  inline-size: fit-content;
+  min-block-size: 2rem;
+  margin: var(--space-2) 0 0;
+  padding: 0 var(--space-3);
+  border: 0.125rem solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font-japanese);
+  font-size: var(--text-meta);
+  font-weight: 800;
+}
+
+.mode-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  inline-size: 100%;
+  padding: var(--space-1);
+  border: 0.125rem solid var(--line);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--surface) 88%, var(--sun));
+}
+
+.mode {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  line-height: 1.15;
+}
+
+.mode.is-active {
+  background: var(--teal);
+  color: var(--white);
+}
+
+.stage {
+  perspective: 75rem;
+}
+
+.flash-card {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 1;
+  min-block-size: 16rem;
+  border: 0;
+  padding: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  transform-style: preserve-3d;
+  transition: transform 260ms ease;
+}
+
+.flash-card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: clip;
+  border: var(--space-2) solid var(--surface);
+  border-radius: var(--radius);
+  backface-visibility: hidden;
+}
+
+.face-front {
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--sun) 40%, transparent), transparent 52%),
+    var(--surface);
+}
+
+.face-back {
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--mint) 70%, transparent), transparent 54%),
+    var(--surface);
+  transform: rotateY(180deg);
+}
+
+:where(.formula, .answer) {
+  display: block;
+  max-inline-size: 92%;
+  overflow-wrap: anywhere;
+  font-family: var(--font-japanese);
+  font-size: var(--text-card-sm);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.answer {
+  color: var(--teal);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  margin-block-start: var(--space-8);
+}
+
+.controls button {
+  padding: var(--space-2) var(--space-4);
+  line-height: 1.15;
+}
+
+.primary {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--white);
+}
+
+@media (hover: hover) {
+  .flash-card:hover {
+    transform: translateY(-0.25rem);
+  }
+
+  .flash-card.is-flipped:hover {
+    transform: translateY(-0.25rem) rotateY(180deg);
+  }
+
+  .primary:hover:not(:disabled),
+  .mode.is-active:hover:not(:disabled) {
+    background: var(--primary-strong);
+  }
+}
+
+@media (pointer: coarse) {
+  button {
+    min-block-size: 3.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash-card {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .flash-card,
+  .face,
+  .progress,
+  .mode-switch,
+  button {
+    border-color: var(--forced-border);
+  }
+}
+
+@media (min-width: 40rem) {
+  body {
+    place-items: center;
+  }
+
+  .app {
+    padding: var(--space-8);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    margin-block-end: var(--space-8);
+  }
+
+  h1 {
+    font-size: var(--text-title-lg);
+  }
+
+  .mode-switch {
+    inline-size: 16rem;
+  }
+
+  .flash-card {
+    aspect-ratio: 16 / 10;
+    min-block-size: 20rem;
+  }
+
+  .formula,
+  .answer {
+    font-size: var(--text-card-lg);
+  }
+
+  .controls {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
