@@ -118,8 +118,8 @@ h1 {
 }
 
 .deck-card {
-  min-block-size: 8rem;
-  padding: var(--space-5);
+  min-block-size: 6rem;
+  padding: var(--space-4);
   border-color: var(--teal);
   background:
     linear-gradient(160deg, color-mix(in srgb, var(--sun) 36%, transparent), transparent 56%),
@@ -323,6 +323,11 @@ h1 {
 
   .deck-options {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .deck-card {
+    min-block-size: 8rem;
+    padding: var(--space-5);
   }
 
   .flash-card {

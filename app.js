@@ -1,6 +1,10 @@
 const MAX_ADDEND = 9;
 const MAX_SUM = 10;
 const MAX_SUBTRACTION_LEFT = 10;
+const MIN_LEVEL_2_NUMBER = 2;
+const MAX_LEVEL_2_NUMBER = 9;
+const MIN_LEVEL_2_SUM = 11;
+const MAX_LEVEL_2_SUM = 18;
 
 function buildAdditionCards() {
   const cards = [];
@@ -32,6 +36,30 @@ function buildSubtractionCards() {
   return cards;
 }
 
+function buildAdditionLevel2Cards() {
+  const cards = [];
+
+  for (let left = MIN_LEVEL_2_NUMBER; left <= MAX_LEVEL_2_NUMBER; left += 1) {
+    for (let right = MIN_LEVEL_2_SUM - left; right <= MAX_LEVEL_2_NUMBER; right += 1) {
+      cards.push({ left, right, operator: "+", answer: left + right });
+    }
+  }
+
+  return cards;
+}
+
+function buildSubtractionLevel2Cards() {
+  const cards = [];
+
+  for (let left = MIN_LEVEL_2_SUM; left <= MAX_LEVEL_2_SUM; left += 1) {
+    for (let right = left - MAX_LEVEL_2_NUMBER; right <= MAX_LEVEL_2_NUMBER; right += 1) {
+      cards.push({ left, right, operator: "-", answer: left - right });
+    }
+  }
+
+  return cards;
+}
+
 function shuffleCards(cards) {
   const shuffled = cards.slice();
 
@@ -48,6 +76,10 @@ function runSelfCheck() {
   const additionKeys = new Set(additionCards.map((card) => `${card.left}${card.operator}${card.right}`));
   const subtractionCards = buildSubtractionCards();
   const subtractionKeys = new Set(subtractionCards.map((card) => `${card.left}${card.operator}${card.right}`));
+  const additionLevel2Cards = buildAdditionLevel2Cards();
+  const additionLevel2Keys = new Set(additionLevel2Cards.map((card) => `${card.left}${card.operator}${card.right}`));
+  const subtractionLevel2Cards = buildSubtractionLevel2Cards();
+  const subtractionLevel2Keys = new Set(subtractionLevel2Cards.map((card) => `${card.left}${card.operator}${card.right}`));
 
   if (additionCards.length !== 64) throw new Error(`expected 64 addition cards, got ${additionCards.length}`);
   if (!additionKeys.has("0+0")) throw new Error("missing 0+0");
@@ -62,23 +94,46 @@ function runSelfCheck() {
   if (subtractionKeys.has("0-9")) throw new Error("subtraction deck includes negative problem");
   if (subtractionKeys.has("10-10")) throw new Error("subtraction deck includes 10-10");
   if (subtractionCards.some((card) => card.answer < 0)) throw new Error("subtraction answer below 0");
+
+  if (additionLevel2Cards.length !== 36) throw new Error(`expected 36 addition level 2 cards, got ${additionLevel2Cards.length}`);
+  if (additionLevel2Cards[0].left !== 2 || additionLevel2Cards[0].right !== 9) throw new Error("addition level 2 must start with 2+9");
+  if (additionLevel2Cards[1].left !== 3 || additionLevel2Cards[1].right !== 8) throw new Error("addition level 2 must continue with 3+8");
+  if (!additionLevel2Keys.has("9+9")) throw new Error("missing 9+9");
+  if (additionLevel2Cards.some((card) => card.answer < MIN_LEVEL_2_SUM || card.answer > MAX_LEVEL_2_SUM)) throw new Error("addition level 2 answer out of range");
+
+  if (subtractionLevel2Cards.length !== 36) throw new Error(`expected 36 subtraction level 2 cards, got ${subtractionLevel2Cards.length}`);
+  if (subtractionLevel2Cards[0].left !== 11 || subtractionLevel2Cards[0].right !== 2) throw new Error("subtraction level 2 must start with 11-2");
+  if (subtractionLevel2Cards[7].left !== 11 || subtractionLevel2Cards[7].right !== 9) throw new Error("subtraction level 2 must list 11-9 before 12-3");
+  if (subtractionLevel2Cards[8].left !== 12 || subtractionLevel2Cards[8].right !== 3) throw new Error("subtraction level 2 must continue with 12-3");
+  if (!subtractionLevel2Keys.has("18-9")) throw new Error("missing 18-9");
+  if (subtractionLevel2Cards.some((card) => card.answer < MIN_LEVEL_2_NUMBER || card.answer > MAX_LEVEL_2_NUMBER)) throw new Error("subtraction level 2 answer out of range");
 }
 
 function initApp() {
   const decks = {
-    addition: {
-      titleThai: "บัตรบวกเลข",
-      titleJapanese: "たし算カード",
+    additionLevel1: {
+      titleThai: "บัตรบวกเลขระดับ 1",
+      titleJapanese: "たし算カード レベル1",
       cards: buildAdditionCards(),
     },
-    subtraction: {
-      titleThai: "บัตรลบเลข",
-      titleJapanese: "ひき算カード",
+    subtractionLevel1: {
+      titleThai: "บัตรลบเลขระดับ 1",
+      titleJapanese: "ひき算カード レベル1",
       cards: buildSubtractionCards(),
+    },
+    additionLevel2: {
+      titleThai: "บัตรบวกเลขระดับ 2",
+      titleJapanese: "たし算カード レベル2",
+      cards: buildAdditionLevel2Cards(),
+    },
+    subtractionLevel2: {
+      titleThai: "บัตรลบเลขระดับ 2",
+      titleJapanese: "ひき算カード レベル2",
+      cards: buildSubtractionLevel2Cards(),
     },
   };
 
-  let activeDeck = decks.addition;
+  let activeDeck = decks.additionLevel1;
   let cards = activeDeck.cards;
   let deck = cards;
   let index = 0;
@@ -86,8 +141,7 @@ function initApp() {
 
   const homeScreen = document.querySelector("#home-screen");
   const practiceScreen = document.querySelector("#practice-screen");
-  const additionDeckButton = document.querySelector("#addition-deck");
-  const subtractionDeckButton = document.querySelector("#subtraction-deck");
+  const deckButtons = document.querySelectorAll("[data-deck]");
   const homeButton = document.querySelector("#home-button");
   const appTitleThai = document.querySelector("#app-title span:first-child");
   const appTitleJapanese = document.querySelector("#app-title span[lang='ja']");
@@ -160,8 +214,9 @@ function initApp() {
     render();
   }
 
-  additionDeckButton.addEventListener("click", () => showPractice("addition"));
-  subtractionDeckButton.addEventListener("click", () => showPractice("subtraction"));
+  deckButtons.forEach((button) => {
+    button.addEventListener("click", () => showPractice(button.dataset.deck));
+  });
   homeButton.addEventListener("click", showHome);
   cardButton.addEventListener("click", flip);
   flipButton.addEventListener("click", flip);
