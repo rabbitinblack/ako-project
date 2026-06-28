@@ -1,6 +1,6 @@
 const MAX_ADDEND = 9;
 const MAX_SUM = 10;
-const MAX_SUBTRACTION_NUMBER = 9;
+const MAX_SUBTRACTION_LEFT = 10;
 
 function buildAdditionCards() {
   const cards = [];
@@ -19,8 +19,12 @@ function buildAdditionCards() {
 function buildSubtractionCards() {
   const cards = [];
 
-  for (let left = 0; left <= MAX_SUBTRACTION_NUMBER; left += 1) {
-    for (let right = 0; right <= left; right += 1) {
+  for (let left = 0; left <= MAX_SUBTRACTION_LEFT; left += 1) {
+    cards.push({ left, right: 0, operator: "-", answer: left });
+  }
+
+  for (let left = 2; left <= MAX_SUBTRACTION_LEFT; left += 1) {
+    for (let right = 1; right < left; right += 1) {
       cards.push({ left, right, operator: "-", answer: left - right });
     }
   }
@@ -50,11 +54,13 @@ function runSelfCheck() {
   if (!additionKeys.has("9+1")) throw new Error("missing 9+1");
   if (additionCards.some((card) => card.answer > MAX_SUM)) throw new Error("addition answer exceeds 10");
 
-  if (subtractionCards.length !== 55) throw new Error(`expected 55 subtraction cards, got ${subtractionCards.length}`);
-  if (!subtractionKeys.has("0-0")) throw new Error("missing 0-0");
-  if (!subtractionKeys.has("9-0")) throw new Error("missing 9-0");
-  if (!subtractionKeys.has("9-9")) throw new Error("missing 9-9");
+  if (subtractionCards.length !== 56) throw new Error(`expected 56 subtraction cards, got ${subtractionCards.length}`);
+  if (subtractionCards[0].left !== 0 || subtractionCards[0].right !== 0) throw new Error("subtraction deck must start with 0-0");
+  if (subtractionCards[10].left !== 10 || subtractionCards[10].right !== 0) throw new Error("subtraction deck must list 10-0 before positive subtrahends");
+  if (subtractionCards[11].left !== 2 || subtractionCards[11].right !== 1) throw new Error("subtraction deck must continue with 2-1");
+  if (!subtractionKeys.has("10-9")) throw new Error("missing 10-9");
   if (subtractionKeys.has("0-9")) throw new Error("subtraction deck includes negative problem");
+  if (subtractionKeys.has("10-10")) throw new Error("subtraction deck includes 10-10");
   if (subtractionCards.some((card) => card.answer < 0)) throw new Error("subtraction answer below 0");
 }
 

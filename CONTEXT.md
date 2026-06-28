@@ -13,5 +13,5 @@ The set of flashcards for addition problems.
 _Avoid_: Plus mode, add card set
 
 **Subtraction Deck**:
-The set of flashcards for subtraction problems where both numbers are 0 through 9 and every answer is 0 or greater.
+The set of flashcards for subtraction problems that starts with 0 through 10 minus 0, then continues with positive-answer subtraction up to 10 minus 9.
 _Avoid_: Minus mode, subtract card set
