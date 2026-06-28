@@ -151,9 +151,6 @@ function initApp() {
   const frontFace = question.closest(".face-front");
   const backFace = answer.closest(".face-back");
   const progress = document.querySelector("#progress");
-  const flipButton = document.querySelector("#flip-card");
-  const flipButtonThai = flipButton.querySelector(".label-th");
-  const flipButtonJapanese = flipButton.querySelector(".label-ja");
   const prevButton = document.querySelector("#prev-card");
   const nextButton = document.querySelector("#next-card");
   const orderedMode = document.querySelector("#ordered-mode");
@@ -199,8 +196,6 @@ function initApp() {
     cardButton.setAttribute("aria-label", isFlipped ? "กลับไปดูโจทย์ / 問題を見る" : "เปิดคำตอบ / 答えを見る");
     frontFace.setAttribute("aria-hidden", String(isFlipped));
     backFace.setAttribute("aria-hidden", String(!isFlipped));
-    flipButtonThai.textContent = isFlipped ? "ดูโจทย์" : "ดูคำตอบ";
-    flipButtonJapanese.textContent = isFlipped ? "問題を見る" : "答えを見る";
   }
 
   function flip() {
@@ -219,7 +214,6 @@ function initApp() {
   });
   homeButton.addEventListener("click", showHome);
   cardButton.addEventListener("click", flip);
-  flipButton.addEventListener("click", flip);
   prevButton.addEventListener("click", () => move(-1));
   nextButton.addEventListener("click", () => move(1));
   orderedMode.addEventListener("click", () => setMode("ordered"));
